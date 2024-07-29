@@ -1,0 +1,109 @@
+import React, { useCallback, useEffect, useState } from 'react'
+import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/api';
+import polyline from '@mapbox/polyline';
+
+const containerStyle = {
+    width: '60vw',
+    height: '400px',
+    marginInline: 'auto',
+    marginTop: '20px',
+    border: '1px solid black',
+    borderRadius: '1rem'
+};
+
+const apiKey = process.env.REACT_APP_GOOGLE_API_KEY
+
+const Map = ({ encodedPolylines, landmarks }) => {
+
+    const [map, setMap] = useState(null)
+    const [markers, setMarkers] = useState([])
+    const [paths, setPaths] = useState([])
+    const [center, setCenter] = useState({
+        lat: 32.7683,
+        lng: 35.217018
+    })
+    const [zoom, setZoom] = useState(2)
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
+        })
+    }, [])
+
+    useEffect(() => {
+        const decodedPaths = encodedPolylines.map(encodedPath => polyline.decode(encodedPath).map(([lat, lng]) => ({ lat, lng })))
+        setPaths(decodedPaths)
+
+        if (decodedPaths.length) {
+            const startPoint = decodedPaths[0][0]
+            const endPoint = decodedPaths[decodedPaths.length - 1][decodedPaths[decodedPaths.length - 1].length - 1]
+            const avgLat = (startPoint.lat + endPoint.lat) / 2
+            const avgLng = (startPoint.lng + endPoint.lng) / 2
+            setCenter({ lat: avgLat, lng: avgLng })
+        } else if (landmarks.length) {
+            setCenter({
+                lat: (landmarks[0].lat + landmarks[landmarks.length - 1].lat) / 2,
+                lng: (landmarks[0].lng + landmarks[landmarks.length - 1].lng) / 2
+            })
+        }
+
+        if (landmarks.length) {
+            const latGap = landmarks[0].lat - landmarks[landmarks.length - 1].lat
+            const lngGap = landmarks[0].lng - landmarks[landmarks.length - 1].lng
+            console.log("gap: ", latGap, ", ", lngGap)
+            setZoom(latGap < 3 && lngGap < 3 ? 8 : 5)
+        }
+
+    }, [encodedPolylines])
+
+    useEffect(() => {
+        const newMarkers = []
+        landmarks.forEach(landmark => {
+            newMarkers.push({ position:{lat: landmark.lat, lng: landmark.lng}, title:`${landmark.day} - ${landmark.destination}` })
+        })
+
+        setMarkers(newMarkers)
+    }, [landmarks])
+
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: apiKey
+    })
+
+    const onLoad = useCallback((map) => {
+        map.setCenter(center)
+        setMap(map)
+    }, [center])
+
+    const onUnmount = useCallback((map) => {
+        setMap(null)
+    }, [])
+
+    return isLoaded ? (
+        <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={zoom}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+        >
+            {paths.map((path, index) => (
+                <Polyline
+                    key={index}
+                    path={path}
+                    options={{
+                        strokeColor: '#001c54',
+                        strokeOpacity: 0.5,
+                        strokeWeight: 5,
+                    }}
+                />
+            ))}
+
+            {markers.map((marker, idx) => (
+                <Marker key={idx} position={marker.position} icon={"./location.svg"} title={marker.title} />
+            ))}
+        </GoogleMap>
+    ) : <></>
+}
+
+export default Map

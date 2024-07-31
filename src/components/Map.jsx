@@ -3,7 +3,7 @@ import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/
 import polyline from '@mapbox/polyline';
 
 const containerStyle = {
-    width: '60vw',
+    width: '80vw',
     height: '400px',
     marginInline: 'auto',
     marginTop: '20px',
@@ -13,7 +13,7 @@ const containerStyle = {
 
 const apiKey = process.env.REACT_APP_GOOGLE_API_KEY
 
-const Map = ({ encodedPolylines, landmarks }) => {
+const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
 
     const [map, setMap] = useState(null)
     const [markers, setMarkers] = useState([])
@@ -50,19 +50,22 @@ const Map = ({ encodedPolylines, landmarks }) => {
         if (landmarks.length) {
             const latGap = landmarks[0].lat - landmarks[landmarks.length - 1].lat
             const lngGap = landmarks[0].lng - landmarks[landmarks.length - 1].lng
-            console.log("gap: ", latGap, ", ", lngGap)
-            setZoom(latGap < 3 && lngGap < 3 ? 8 : 5)
+            setZoom(latGap < 1 && lngGap < 1 ? 10 : latGap < 3 && lngGap < 3 ? 8 : 5)
         }
 
     }, [encodedPolylines])
 
     useEffect(() => {
         const newMarkers = []
-        landmarks.forEach(landmark => {
-            newMarkers.push({ position:{lat: landmark.lat, lng: landmark.lng}, title:`${landmark.day} - ${landmark.destination}` })
-        })
+        if (landmarks.length) {
+            landmarks.forEach(landmark => {
+                if (landmark.lat) {
+                    newMarkers.push({ position: { lat: landmark.lat, lng: landmark.lng }, day: landmark.day, title: landmark.destination })
+                }
+            })
 
-        setMarkers(newMarkers)
+            setMarkers(newMarkers)
+        }
     }, [landmarks])
 
     const { isLoaded } = useJsApiLoader({
@@ -79,6 +82,10 @@ const Map = ({ encodedPolylines, landmarks }) => {
         setMap(null)
     }, [])
 
+    const onMarker = (day, title) => {
+        showDayTrip(day)
+    }
+
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyle}
@@ -93,14 +100,16 @@ const Map = ({ encodedPolylines, landmarks }) => {
                     path={path}
                     options={{
                         strokeColor: '#001c54',
-                        strokeOpacity: 0.5,
-                        strokeWeight: 5,
+                        strokeOpacity: 1,
+                        strokeWeight: 3,
                     }}
                 />
             ))}
 
             {markers.map((marker, idx) => (
-                <Marker key={idx} position={marker.position} icon={"./location.svg"} title={marker.title} />
+                <Marker key={idx} position={marker.position} icon={"./location.svg"} title={marker.day + ": " + marker.title} onClick={() => {
+                    onMarker(marker.day, marker.title)
+                }} />
             ))}
         </GoogleMap>
     ) : <></>

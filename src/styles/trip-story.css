@@ -1,0 +1,54 @@
+.schedule-main {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 55vw;
+    margin-inline: auto;
+    height: 250px;
+    overflow-y: auto;
+
+    .day-row {
+        background: rgba(187, 255, 207, 0.7);
+        border: 1px solid black;
+        height: 2rem;
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        justify-content: start;
+        border-radius: 3rem;
+        padding: 10px;
+        padding-inline: 20px;
+        cursor: pointer;
+    }
+}
+
+.day-story-main {
+    position: absolute;
+    left: 50vw;
+    top: 50svh;
+    translate: -50% -50%;
+    background: rgb(246, 248, 255);
+    border: 1px solid black;
+    width: 50vw;
+    height: 70svh;
+    z-index: 20;
+    opacity: .95;
+    border-radius: 5%;
+    padding: 1rem;
+    
+    
+    .x {
+        position: absolute;
+        right: 2rem;
+        top: 1rem;
+        font-size: x-large;
+        cursor: pointer;
+    }
+
+    .description {
+        margin-top: 3rem;
+        margin-inline: 1rem;
+        text-align: justify;
+    }
+}

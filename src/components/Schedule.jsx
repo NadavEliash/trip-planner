@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import DayRow from './DayRow'
 
-const Story = ({ landmarks }) => {
+export default function Schedule({ landmarks, showDayTrip, dayStories }) {
 
-    const [tripStory, setTripStory] = useState('')
+    const [days, setDays] = useState([])
 
     useEffect(() => {
         if (landmarks.length) {
@@ -16,26 +17,15 @@ const Story = ({ landmarks }) => {
                 }
             }
 
-            console.log(landmarksByDay)
-        }
-    }, [landmarks])
-
-    useState(() => {
-        if (landmarks.length) {
-
-            let story = ""
-            for (let i = 0; i < landmarks.length - 1; i++) {
-                i === landmarks.length - 2 ? story += landmarks[i].destination
-                    : story += landmarks[i].destination + " ▸ "
-            }
-
-            setTripStory(story)
+            setDays(landmarksByDay)
         }
     }, [landmarks])
 
     return (
-        <div>{tripStory}</div>
+        <div className='schedule-main'>
+            {days.map((day, idx) =>
+                <DayRow key={idx} day={day} showDayTrip={showDayTrip} />
+            )}
+        </div>
     )
 }
-
-export default Story

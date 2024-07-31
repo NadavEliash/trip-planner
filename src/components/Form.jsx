@@ -1,15 +1,53 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useState } from 'react'
 
-const Form = ({ setLandmarks, setEncodedPolylines }) => {
+const Form = ({ setLandmarks, setEncodedPolylines, dayStories, setDayStories }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    const res = await axios.get(`http://localhost:8080/track?destination=${e.target[0].value}&from=${e.target[1].value}&to=${e.target[2].value}`)
-    const track = res.data
+    if (e.target[0]) {
+      setLandmarks([])
+      setEncodedPolylines([])
+      setDayStories([])
+    }
 
-    setLandmarks(track.landmarks)
-    createRoutes(track.routes)
+    try {
+      const res = await axios.get(`http://localhost:8080/trip?destination=${e.target[0].value}&from=${e.target[1].value}&to=${e.target[2].value}`)
+      const trip = res.data
+
+      const landmarks = trip.landmarks
+      setLandmarks(landmarks)
+      createRoutes(trip.routes)
+
+      const landmarksByDay = []
+
+      for (let i = 0; i < landmarks.length; i++) {
+        if (landmarksByDay.length >= 1 && landmarksByDay[landmarksByDay.length - 1].day === landmarks[i].day) {
+          landmarksByDay[landmarksByDay.length - 1].destinations.push({ address: landmarks[i].destination, lat: landmarks[i].lat, lng: landmarks[i].lng })
+        } else {
+          landmarksByDay.push({ day: landmarks[i].day, destinations: [{ address: landmarks[i].destination, lat: landmarks[i].lat, lng: landmarks[i].lng }] })
+        }
+      }
+
+      landmarksByDay.map(tripDay => {
+        const day = tripDay.day
+        const places = tripDay.destinations.reduce((acc, curr) => acc + curr.address + ", ", "")
+        const options = "best street food"
+        getTripByDay(day, places, options)
+      }
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getTripByDay = async (day, places, options = "") => {
+    try {
+      const dayTrip = await axios.get(`http://localhost:8080/dayTrip?day=${day}&places=${places}&options=${options}`)
+      setDayStories(prev=>[...prev, { day, description: dayTrip.data }])
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const createRoutes = (routes) => {

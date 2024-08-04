@@ -28,9 +28,11 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
         navigator.geolocation.getCurrentPosition((position) => {
             setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
         })
+
     }, [])
 
     useEffect(() => {
+        setPaths([])
         const decodedPaths = encodedPolylines.map(encodedPath => polyline.decode(encodedPath).map(([lat, lng]) => ({ lat, lng })))
         setPaths(decodedPaths)
 
@@ -50,7 +52,12 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
         if (landmarks.length) {
             const latGap = landmarks[0].lat - landmarks[landmarks.length - 1].lat
             const lngGap = landmarks[0].lng - landmarks[landmarks.length - 1].lng
-            setZoom(latGap < 1 && lngGap < 1 ? 10 : latGap < 3 && lngGap < 3 ? 8 : 5)
+
+            if (latGap < 1 && lngGap < 1) {
+                setZoom(4)
+            } else {
+                setZoom(6)
+            }
         }
 
     }, [encodedPolylines])
@@ -101,7 +108,7 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
                     options={{
                         strokeColor: '#001c54',
                         strokeOpacity: 1,
-                        strokeWeight: 3,
+                        strokeWeight: 2,
                     }}
                 />
             ))}

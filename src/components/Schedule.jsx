@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import DayRow from './DayRow'
 
-export default function Schedule({ landmarks, showDayTrip, dayStories }) {
+export default function Schedule({ landmarks, showDayTrip, days }) {
 
-    const [days, setDays] = useState([])
+    const [rows, setRows] = useState([])
 
     useEffect(() => {
         if (landmarks.length) {
@@ -17,13 +17,13 @@ export default function Schedule({ landmarks, showDayTrip, dayStories }) {
                 }
             }
 
-            setDays(landmarksByDay)
+            setRows(landmarksByDay)
         }
     }, [landmarks])
 
     return (
         <div className='schedule-main'>
-            {days.map((day, idx) =>
+            {rows.map((day, idx) =>
                 <DayRow key={idx} day={day} showDayTrip={showDayTrip} />
             )}
         </div>

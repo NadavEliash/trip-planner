@@ -5,13 +5,14 @@
     align-items: center;
 
     .main-form {
-        width: 66%;
+        margin-block: 1rem;
+        width: 68vw;
         display: flex;
         gap: 1%;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         border: 1px solid black;
-        padding: 3px;
+        padding: 5px;
         border-radius: 2rem;
     }
 
@@ -55,7 +56,8 @@
         align-items: center;
         justify-content: center;
         height: 3rem;
-        width: 3rem;
+        width: 3.5rem;
+        margin-right: 3px;
         border-radius: 2rem;
         border: 0;
         background-color: rgb(180, 215, 255);
@@ -72,7 +74,7 @@
     }
 
     .recommendations {
-        width: 200px;
+        width: 190px;
         border: 1px solid rgb(143, 143, 143);
         height: 2rem;
         border-radius: .5rem;
@@ -89,4 +91,21 @@
 
 .checked {
     margin-left: 50px;
+}
+
+.not-found {
+    position: absolute;
+    width: 100vw;
+    height: 100svh;
+    background: rgba(235, 234, 234, .7);
+    left: 0;
+    top: 0;
+    z-index: 50;
+
+    .text {
+        position: absolute;
+        top: 40vh;
+        left: 50vw;
+        translate: -50%;
+    }
 }

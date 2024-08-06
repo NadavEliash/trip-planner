@@ -3,12 +3,12 @@ import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/
 import polyline from '@mapbox/polyline';
 
 const containerStyle = {
-    width: '80vw',
+    width: '70vw',
     height: '400px',
     marginInline: 'auto',
-    marginTop: '20px',
+    marginTop: '1rem',
     border: '1px solid black',
-    borderRadius: '1rem'
+    borderRadius: '2rem'
 };
 
 const apiKey = process.env.REACT_APP_GOOGLE_API_KEY

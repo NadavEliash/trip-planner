@@ -1,6 +1,8 @@
 @import "./styles/form.css";
 @import "./styles/trip-story.css";
 @import "./styles/loader.css";
+@import "./styles/auth.css";
+
 
 html {
   margin: 0;
@@ -10,4 +12,24 @@ html {
 
 .App {
   text-align: center;
+}
+
+.hello-user {
+  margin: 0;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-weight: 600;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.title {
+  font-family: "Dancing Script", cursive;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 2.5rem;
 }

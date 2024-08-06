@@ -1,9 +1,11 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Menu, MenuItem } from '@mui/material'
+import TripService from '../services/trip-service'
 
 const Form = ({
   setIsLoading,
+  setIsError,
   setLandmarks,
   setEncodedPolylines,
   setDays,
@@ -29,14 +31,13 @@ const Form = ({
 
     try {
       setIsLoading(true)
-      const res = await axios.get(`http://localhost:8080/trip?destination=${e.target[0].value}&from=${e.target[1].value}&to=${e.target[2].value}`)
-      const trip = res.data
+      const trip = await TripService.getTripData(e.target[0].value, e.target[1].value, e.target[2].value)
 
       const landmarks = trip.landmarks
       setLandmarks(landmarks)
       createRoutes(trip.routes)
 
-      const landmarksByDay = []
+      let landmarksByDay = []
 
       for (let i = 0; i < landmarks.length; i++) {
         if (landmarksByDay.length >= 1 && landmarksByDay[landmarksByDay.length - 1].day === landmarks[i].day) {
@@ -46,41 +47,25 @@ const Form = ({
         }
       }
 
-      landmarksByDay.map(tripDay => {
+      landmarksByDay.map(async (tripDay) => {
         const options = getOptions()
-        getTripByDay(tripDay.day, tripDay.destinations, options)
+        const trip = await TripService.getTripByDay(tripDay.day, tripDay.destinations, options)
+        
+        setDays(prev => [...prev, { day: tripDay, trip }])
+        
+        trip.places.forEach(async (place) => {
+          const newPlace = await TripService.getGooglePhotos(place)
+          setAlbum(prev => [...prev, newPlace])
+        })
       }
       )
+
       setIsLoading(false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const getTripByDay = async (day, destinations, options = '') => {
-    const places = destinations.reduce((acc, curr) => acc + curr.address + ", ", '')
-
-    try {
-      const dayTrip = await axios.get(`http://localhost:8080/day_trip?day=${day}&places=${places}&options=${options}`)
-      setDays(prev => [...prev, { day, trip: dayTrip.data }])
-
-      dayTrip.data.places.forEach(place => {
-        getGooglePhotos(place)
-      })
 
     } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const getGooglePhotos = async (place) => {
-    try {
-
-      const res = await axios.get(`http://localhost:8080/place_photos?place=${place}`)
-      const photos = res.data
-      setAlbum(prev => [...prev, { name: place, photos: [photos[0], photos[1], photos[2]] }])
-
-    } catch (error) {
+      
+      setIsLoading(false)
+      setIsError(true)
       console.error(error)
     }
   }

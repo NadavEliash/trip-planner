@@ -1,8 +1,9 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import DBService from './db-service';
 
 const TripService = {
-    
+
     async getTripData(destination, startDate, endDate) {
         const res = await axios.get(`http://localhost:8080/trip?destination=${destination}&from=${startDate}&to=${endDate}`, { headers: authHeader() })
         return res.data
@@ -10,7 +11,6 @@ const TripService = {
 
     async getTripByDay(day, destinations, options = '') {
         const places = destinations.reduce((acc, curr) => acc + curr.address + ", ", '')
-
         try {
             const dayTrip = await axios.get(`http://localhost:8080/day_trip?day=${day}&places=${places}&options=${options}`, { headers: authHeader() })
             return dayTrip.data
@@ -20,15 +20,42 @@ const TripService = {
         }
     },
 
-    async getGooglePhotos(place) {
+    async getGooglePhotos(place, destination) {
         try {
 
-            const res = await axios.get(`http://localhost:8080/place_photos?place=${place}`, { headers: authHeader() })
+            const res = await axios.get(`http://localhost:8080/place_photos?place=${place}(${destination})`, { headers: authHeader() })
             const photos = res.data
             return { name: place, photos: [photos[0], photos[1], photos[2]] }
 
         } catch (error) {
             console.error(error)
+        }
+    },
+
+    async setTripData(destination, startDate, endDate, options, trip, days, album) {
+
+        const tripData = {
+            destination: destination.toLocaleLowerCase(),
+            startDate,
+            endDate,
+            options,
+            trip,
+            days,
+            album
+        }
+
+        await DBService.setTrip(tripData)
+    },
+
+    async getRecommendations(date, places, options) {
+        try {
+            const placesStr = places.toString()
+            const res = await axios.get(`http://localhost:8080/recommendation?day=${date}&places=${placesStr}&options=${options}`, { headers: authHeader() })
+    
+            return res.data
+            
+        } catch (error) {
+            return console.error(error)
         }
     }
 

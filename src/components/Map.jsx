@@ -67,7 +67,7 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
         if (landmarks.length) {
             landmarks.forEach(landmark => {
                 if (landmark.lat) {
-                    newMarkers.push({ position: { lat: landmark.lat, lng: landmark.lng }, day: landmark.day, title: landmark.destination })
+                    newMarkers.push({ position: { lat: landmark.lat, lng: landmark.lng }, date: landmark.day, title: landmark.destination })
                 }
             })
 
@@ -89,8 +89,8 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
         setMap(null)
     }, [])
 
-    const onMarker = (day, title) => {
-        showDayTrip(day)
+    const onMarker = (date, title) => {
+        showDayTrip(date)
     }
 
     return isLoaded ? (
@@ -114,8 +114,8 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
             ))}
 
             {markers.map((marker, idx) => (
-                <Marker key={idx} position={marker.position} icon={"./location.svg"} title={marker.day + ": " + marker.title} onClick={() => {
-                    onMarker(marker.day, marker.title)
+                <Marker key={idx} position={marker.position} icon={"./location.svg"} title={marker.date + ": " + marker.title} onClick={() => {
+                    onMarker(marker.date, marker.title)
                 }} />
             ))}
         </GoogleMap>

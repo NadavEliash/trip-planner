@@ -1,7 +1,7 @@
-import axios from 'axios'
 import React, { useState } from 'react'
 import { Menu, MenuItem } from '@mui/material'
 import TripService from '../services/trip-service'
+import DBService from '../services/db-service'
 
 const Form = ({
   setIsLoading,
@@ -21,6 +21,10 @@ const Form = ({
     kids: false
   })
 
+
+  let dbDays = []
+  let dbAlbum = []
+
   const onSubmit = async (e) => {
     e.preventDefault()
     if (e.target[0]) {
@@ -29,44 +33,88 @@ const Form = ({
       setDays([])
     }
 
-    try {
-      setIsLoading(true)
-      const trip = await TripService.getTripData(e.target[0].value, e.target[1].value, e.target[2].value)
+    const savedTrip = await DBService.getTrip(e.target[0].value, e.target[1].value, e.target[2].value)
 
-      const landmarks = trip.landmarks
-      setLandmarks(landmarks)
-      createRoutes(trip.routes)
+    if (savedTrip) {
 
-      let landmarksByDay = []
+      setLandmarks(savedTrip.trip.landmarks)
+      createRoutes(savedTrip.trip.routes)
 
-      for (let i = 0; i < landmarks.length; i++) {
-        if (landmarksByDay.length >= 1 && landmarksByDay[landmarksByDay.length - 1].day === landmarks[i].day) {
-          landmarksByDay[landmarksByDay.length - 1].destinations.push({ address: landmarks[i].destination, lat: landmarks[i].lat, lng: landmarks[i].lng })
-        } else {
-          landmarksByDay.push({ day: landmarks[i].day, destinations: [{ address: landmarks[i].destination, lat: landmarks[i].lat, lng: landmarks[i].lng }] })
+      const options = getOptions()
+      if (options && options !== savedTrip.options) {
+        setIsLoading(true)
+        const newDays = await Promise.all(savedTrip.days.map(async (day) => {
+          const recommendations = await TripService.getRecommendations(day.day.date, day.trip.places, options);
+          day.trip.recommendations = recommendations;
+          return day
+        }))
+
+        setDays(newDays.length ? newDays : savedTrip.days);
+        setIsLoading(false)
+      } else {
+        setDays(savedTrip.days)
+      }
+
+      setAlbum(savedTrip.album)
+
+    } else {
+      try {
+        setIsLoading(true)
+        const trip = await TripService.getTripData(e.target[0].value, e.target[1].value, e.target[2].value)
+
+        const landmarks = trip.landmarks
+        setLandmarks(landmarks)
+        createRoutes(trip.routes)
+
+        let landmarksByDay = []
+
+        for (let i = 0; i < landmarks.length; i++) {
+          if (landmarksByDay.length >= 1 && landmarksByDay[landmarksByDay.length - 1].day === landmarks[i].day) {
+            landmarksByDay[landmarksByDay.length - 1].destinations.push({ address: landmarks[i].destination, lat: landmarks[i].lat, lng: landmarks[i].lng })
+          } else {
+            landmarksByDay.push({ date: landmarks[i].day, destinations: [{ address: landmarks[i].destination, lat: landmarks[i].lat, lng: landmarks[i].lng }] })
+          }
         }
-      }
 
-      landmarksByDay.map(async (tripDay) => {
         const options = getOptions()
-        const trip = await TripService.getTripByDay(tripDay.day, tripDay.destinations, options)
-        
-        setDays(prev => [...prev, { day: tripDay, trip }])
-        
-        trip.places.forEach(async (place) => {
-          const newPlace = await TripService.getGooglePhotos(place)
-          setAlbum(prev => [...prev, newPlace])
+        const dayPromises = landmarksByDay.map(async (tripDay) => {
+          const trip = await TripService.getTripByDay(tripDay.date, tripDay.destinations, options)
+
+          const dbDay = { day: tripDay, trip }
+          dbDays.push(dbDay)
+          setDays(prev => [...prev, dbDay])
+
+          setIsLoading(false)
+
+          const placePromises = trip.places.map(async (place) => {
+            const destination = e.target[0].value;
+            const newPlace = await TripService.getGooglePhotos(place, destination)
+            dbAlbum.push(newPlace)
+            setAlbum(prev => [...prev, newPlace])
+          })
+
+          await Promise.all(placePromises)
         })
+
+        await Promise.all(dayPromises)
+
+        TripService.setTripData(
+          e.target[0].value,
+          e.target[1].value,
+          e.target[2].value,
+          options,
+          trip,
+          dbDays,
+          dbAlbum
+        )
+
+
+      } catch (error) {
+
+        setIsLoading(false)
+        setIsError(true)
+        console.error(error)
       }
-      )
-
-      setIsLoading(false)
-
-    } catch (error) {
-      
-      setIsLoading(false)
-      setIsError(true)
-      console.error(error)
     }
   }
 

@@ -6,6 +6,7 @@ import Loader from '../components/Loader';
 import DayPreview from '../components/DayPreview';
 import NotFound from '../components/NotFound';
 import { useNavigate } from 'react-router-dom';
+import AuthService from '../services/auth-service';
 
 function Home() {
   const navigate = useNavigate()
@@ -19,12 +20,19 @@ function Home() {
   const [album, setAlbum] = useState([])
 
   const [username, setUsername] = useState(null)
+  const [logout, setLogout] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'))
     if (user) setUsername(user.username)
   }, [])
+
+  const onLogout = ()=> {
+    AuthService.logout()
+    setLogout(false)
+    setUsername(null)
+  }
 
   const showDayTrip = (date) => {
     if (days.length && days[0].day) {
@@ -47,8 +55,10 @@ function Home() {
   return (
     <div className="Home">
       {username
-        ? <p className='hello-user'>Hello {username}</p>
-        : <div className='pointer hello-user' onClick={() => navigate('/')}>Log in</div>}
+        ? <div className='hello-user' onClick={() => setLogout(!logout)}>Hello {username}
+          {logout && <div className='logout' onClick={onLogout}>Log out</div>}
+        </div>
+        : <div className='hello-user' onClick={() => navigate('/')}>Log in</div>}
       <h1 className='title'>Trip Planner</h1>
       <Form
         setIsLoading={setIsLoading}

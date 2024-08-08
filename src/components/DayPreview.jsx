@@ -9,8 +9,10 @@ export default function DayPreview({ day, setDay, days, album }) {
         if (day && album) {
             const newPlaces = day.trip.places.map(place =>
                 album.find(item => item?.name === place)
-            ).filter(item => item !== (undefined || null))
-            if (newPlaces.length)setPlaces(newPlaces)
+            ).filter(item => item !== undefined && item !== null)
+
+            console.log(newPlaces)
+            if (newPlaces.length) setPlaces(newPlaces)
             setTrip(day.trip)
         }
     }, [day])

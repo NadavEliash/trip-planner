@@ -178,7 +178,7 @@ export default function Form({
     <div>
       <form className='form' onSubmit={onSubmit}>
         <div className='main-form'>
-          <input type="text" name='destination' placeholder='I want to travel to...' className='destination-input' />
+          <input type="text" name='destination' placeholder='I want to travel to' className='destination-input' />
           <div className='dates-container'>
             <div className='dates'>
               <label className='label' htmlFor="from">from:</label>

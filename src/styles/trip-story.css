@@ -226,15 +226,17 @@
 
     .large-photo {
         position: absolute;
-        top: 45svh;
-        left: 50vw;
+        top: 50svh;
+        left: 49vw;
         translate: -50% -50%;
-        height: 80%;
+        height: 80vh;
         border-radius: 3rem;
 
         img {
+            max-height: 80vh;
+
+            max-width: 80vw;
             border-radius: 2rem 2rem 0 0;
-            height: 100%;
         }
     }
 

@@ -12,6 +12,7 @@
         width: 200px;
         padding: .8rem;
         border-radius: 2rem;
+        text-align: center;
     }
 
     .land-btn:hover {
@@ -46,10 +47,16 @@
 
     .auth-btn {
         margin-top: 30px;
+        margin-left: 50vw;
+        translate: -50%;
         padding: 10px;
         width: 200px;
         border-radius: 2rem;
         cursor: pointer;
+    }
+
+    .auth-btn:hover {
+        background: #cfcfcf;
     }
 
     .alert {

@@ -3,14 +3,14 @@ import { Menu, MenuItem } from '@mui/material'
 import TripService from '../services/trip-service'
 import DBService from '../services/db-service'
 
-const Form = ({
+export default function Form({
   setIsLoading,
   setIsError,
   setLandmarks,
   setEncodedPolylines,
   setDays,
   setAlbum
-}) => {
+}) {
 
   const [anchorEl, setAnchorEl] = useState(null)
   const [checkedItems, setCheckedItems] = useState({
@@ -182,5 +182,3 @@ const Form = ({
     </div>
   )
 }
-
-export default Form

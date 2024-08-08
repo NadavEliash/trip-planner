@@ -5,7 +5,7 @@
         width: 100vw;
         height: 100svh;
         background: white;
-        opacity: 0.8;
+        opacity: 0.9;
         z-index: 30;
     }
 
@@ -13,7 +13,7 @@
         z-index: 40;
         position: absolute;
         width: 100vw;
-        top: 15svh;
+        top: 25svh;
         font-size: 2.5rem;
         font-weight: 700;
         text-align: center;
@@ -30,11 +30,11 @@
     @keyframes slide {
         0% {
             left: 10vw;
-            bottom: 45svh;
+            bottom: 35svh;
         }
 
         100% {
             left: 80vw;
-            bottom: 55svh;
+            bottom: 45svh;
         }
     }

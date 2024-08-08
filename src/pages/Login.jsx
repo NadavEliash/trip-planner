@@ -44,22 +44,22 @@ const Login = () => {
     setLoading(true)
 
     AuthService.login(username, password).then(
-        () => {
-          navigate("/home")
-          window.location.reload()
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString()
+      () => {
+        navigate("/home")
+        window.location.reload()
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString()
 
-          setLoading(false)
-          setMessage(resMessage)
-        }
-      )    
+        setLoading(false)
+        setMessage(resMessage)
+      }
+    )
   }
 
   return (
@@ -90,14 +90,14 @@ const Login = () => {
             />
           </div>
 
-          <div>
-            <button className="auth-btn" disabled={loading}>
-              {loading && (
-                <span className="spinner"></span>
-              )}
-              <span>Login</span>
-            </button>
-          </div>
+
+          <button className="auth-btn" disabled={loading}>
+            {loading && (
+              <span className="spinner"></span>
+            )}
+            <span>Login</span>
+          </button>
+
 
           {message && (
             <div className="form-group">

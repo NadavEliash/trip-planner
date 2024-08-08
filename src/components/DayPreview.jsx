@@ -11,7 +11,8 @@ export default function DayPreview({ day, setDay, days, album }) {
                 album.find(item => item?.name === place)
             ).filter(item => item !== (undefined || null))
 
-            setPlaces(newPlaces)
+            console.log(day.trip.places)
+            if (newPlaces.length)setPlaces(newPlaces)
             setTrip(day.trip)
         }
     }, [day])
@@ -30,7 +31,7 @@ export default function DayPreview({ day, setDay, days, album }) {
             <div className='day-story-main'>
                 <div className='x' onClick={() => setDay(null)}>✖</div>
                 <div className='day-story-container'>
-                    {day && <div className='day-preview-title'>{day.day.date}: To
+                    {day?.day && places[0]?.name && <div className='day-preview-title'>{day.day.date}: To
                         {places.length > 0 && places.map((place, idx) =>
                             idx < places.length - 1 ?
                                 <div className='to-place' key={place.name}>{place.name}, </div>

@@ -27,9 +27,15 @@
 
 .auth {
     margin-top: 25vh;
+    margin-inline: auto;
+    width: 400px;
+    padding-block: 2rem;
+    border: 1px solid rgb(168, 168, 168);
+    border-radius: 4rem;
     
     .form-group {
         margin-inline: auto;
+        margin-top: 5px;
         width: 300px;
         display: flex;
         align-items: center;
@@ -37,7 +43,7 @@
     }
 
     .form-control {
-        height: 2rem;
+        height: 2.5rem;
         text-indent: .5rem;
         outline: none;
         margin-top: 5px;
@@ -46,17 +52,20 @@
     }
 
     .auth-btn {
-        margin-top: 30px;
-        margin-left: 50vw;
+        font-size: large;
+        margin-top: 50px;
+        margin-inline: 50%;
         translate: -50%;
         padding: 10px;
         width: 200px;
-        border-radius: 2rem;
+        border-radius: 1rem;
+        border: 0;
         cursor: pointer;
+        background: #dddddd;
     }
 
     .auth-btn:hover {
-        background: #cfcfcf;
+        background: #b4ffaa;
     }
 
     .alert {

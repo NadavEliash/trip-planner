@@ -6,9 +6,9 @@ const containerStyle = {
     width: '70vw',
     height: '400px',
     marginInline: 'auto',
-    marginTop: '1rem',
+    marginTop: '2rem',
     border: '1px solid black',
-    borderRadius: '2rem'
+    borderRadius: '1rem'
 };
 
 const apiKey = process.env.REACT_APP_GOOGLE_API_KEY

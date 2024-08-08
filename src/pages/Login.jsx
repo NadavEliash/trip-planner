@@ -46,7 +46,6 @@ const Login = () => {
     AuthService.login(username, password).then(
       () => {
         navigate("/home")
-        window.location.reload()
       },
       (error) => {
         const resMessage =

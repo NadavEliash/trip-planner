@@ -3,10 +3,11 @@ import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/
 import polyline from '@mapbox/polyline';
 
 const containerStyle = {
-    width: '70vw',
+    width: '90vw',
+    maxWidth: '1000px',
     height: '400px',
     marginInline: 'auto',
-    marginTop: '2rem',
+    marginTop: '1rem',
     border: '1px solid black',
     borderRadius: '1rem'
 };

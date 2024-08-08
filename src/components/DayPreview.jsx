@@ -10,8 +10,6 @@ export default function DayPreview({ day, setDay, days, album }) {
             const newPlaces = day.trip.places.map(place =>
                 album.find(item => item?.name === place)
             ).filter(item => item !== (undefined || null))
-
-            console.log(day.trip.places)
             if (newPlaces.length)setPlaces(newPlaces)
             setTrip(day.trip)
         }
@@ -20,7 +18,7 @@ export default function DayPreview({ day, setDay, days, album }) {
 
     return (
         <>
-            {largePhoto && <div className={largePhoto ? 'large-photo-container' : 'hide-photo'} onClick={() => setLargePhoto(null)}>
+            {largePhoto && <div className='large-photo-container' onClick={() => setLargePhoto(null)}>
 
                 <div className='x' onClick={() => setLargePhoto(null)}>✖</div>
                 <div className='large-photo'>
@@ -44,7 +42,7 @@ export default function DayPreview({ day, setDay, days, album }) {
                         {places.length > 0 && places.map(place =>
                             <div key={place.name} className='place-div'>
                                 <div className='photos-div'>
-                                    {place.photos?.length > 0 && place.photos.map(photo =>
+                                    {place?.photos?.length > 0 && place.photos.map(photo =>
                                         <div key={photo} className='photo-div'>
                                             <img onClick={() => setLargePhoto({ src: photo, name: place.name })} className='photo' src={photo} alt={place.name} />
                                         </div>

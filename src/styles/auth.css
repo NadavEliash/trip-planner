@@ -32,6 +32,12 @@
     padding-block: 2rem;
     border: 1px solid rgb(168, 168, 168);
     border-radius: 4rem;
+
+    @media(max-width: 400px) {
+        margin-inline: 3vw;
+        width: 90vw;
+        border-radius: 1rem;
+    }
     
     .form-group {
         margin-inline: auto;
@@ -40,6 +46,11 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        @media(max-width: 400px) {
+            justify-content: start;
+            gap: 10px;
+        }
     }
 
     .form-control {
@@ -47,6 +58,7 @@
         text-indent: .5rem;
         outline: none;
         margin-top: 5px;
+        margin-left: 5px;
         border: 1px solid rgb(156, 156, 156);
         border-radius: 1rem;
     }

@@ -24,6 +24,7 @@ export default function App() {
   const [username, setUsername] = useState(null)
   const [logout, setLogout] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [dayPreview, setDayPreview] = useState(false)
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'))
@@ -66,6 +67,7 @@ export default function App() {
       <Form
         setIsLoading={setIsLoading}
         setIsError={setIsError}
+        setDayPreview={setDayPreview}
         setLandmarks={setLandmarks}
         setEncodedPolylines={setEncodedPolylines}
         setDays={setDays}
@@ -81,7 +83,7 @@ export default function App() {
         showDayTrip={showDayTrip}
         days={days} />
 
-      {day &&
+      {day && dayPreview &&
         <div>
           <img className='switch-day' onClick={() => { switchDays(-1) }} src="./left.svg" alt='left' />
           <DayPreview

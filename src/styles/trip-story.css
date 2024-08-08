@@ -3,9 +3,11 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 55vw;
+    width: clamp(260px, 80vw, 1000px);
     margin-inline: auto;
-    height: 250px;
+    max-height: 177px;
+    padding-bottom: 10px;
+    padding-inline: .5rem;
     overflow-y: auto;
 
     .day-row {
@@ -22,6 +24,10 @@
         padding: 10px;
         padding-inline: 20px;
         cursor: pointer;
+
+        @media(max-width: 600px) {
+            font-size: smaller;
+        }
     }
 }
 
@@ -44,13 +50,17 @@
     top: 50svh;
     translate: -50% -50%;
     background: rgb(246, 248, 255);
-    border: 1px solid black;
-    width: 70vw;
-    height: 80svh;
+    border: 1px solid rgb(170, 170, 170);
+    width: clamp(280px, 92vw, 1010px);
+    height: 93svh;
     z-index: 20;
     border-radius: 1rem;
     padding: 1rem;
     padding-bottom: 2rem;
+
+    @media(max-width: 600px) {
+        height: 97svh;
+    }
 
     .x {
         position: fixed;
@@ -80,6 +90,10 @@
         .to-place {
             display: flex;
         }
+
+        @media(max-width: 600px) {
+            font-size: 1.1rem;
+        }
     }
 
     .description {
@@ -92,7 +106,7 @@
 
 .day-story-container {
     overflow-y: auto;
-    margin-top: 6%;
+    margin-top: 3.5rem;
     height: 92%;
     padding: .5rem;
 }
@@ -126,6 +140,13 @@
         position: relative;
         overflow: hidden;
         cursor: pointer;
+
+        @media(max-width: 600px) {
+            flex-direction: column;
+            padding: .5rem;
+            border-radius: 1rem 1rem 0 0;
+            background: #d7e2f8;
+        }
     }
 
     .photo {
@@ -188,8 +209,12 @@
     height: 100svh;
     left: 0;
     top: 0;
-    z-index: 40;
+    z-index: 50;
     background: rgba(255, 255, 255, 0.9);
+
+    @media(max-width: 600px) {
+        display: none;
+    }
 
     .x {
         position: absolute;
@@ -204,7 +229,7 @@
         top: 45svh;
         left: 50vw;
         translate: -50% -50%;
-        height: 70%;
+        height: 80%;
         border-radius: 3rem;
 
         img {
@@ -232,18 +257,16 @@
     top: 50svh;
     translate: 0 -50%;
     cursor: pointer;
-    width: 40px;
+    width: max(3rem, 6vw);
     border-radius: .5rem;
     z-index: 30;
-    background: rgb(246, 248, 255);
-    padding: .5rem;
-    border: 2px solid black;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .switch-day:first-child {
-    left: 7vw;
+    left: .5vw;
 }
 
 .switch-day:last-child {
-    right: 7vw;
+    right: .5vw;
 }

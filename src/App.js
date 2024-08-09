@@ -9,11 +9,14 @@ import DayPreview from './components/DayPreview';
 import NotFound from './components/NotFound';
 import { useNavigate } from 'react-router-dom';
 import AuthService from './services/auth-service';
+import authHeader from './services/auth-header';
+import axios from 'axios';
 
 export default function App() {
   const navigate = useNavigate()
 
   const [isError, setIsError] = useState(false)
+  const [googleApiKey, setGoogleApiKey] = useState(false)
   const [encodedPolylines, setEncodedPolylines] = useState([])
   const [landmarks, setLandmarks] = useState([])
   const [days, setDays] = useState([])
@@ -26,12 +29,16 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [dayPreview, setDayPreview] = useState(false)
 
+  const API_URL = process.env.REACT_APP_API_BASE_URL
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'))
     if (user) setUsername(user.username)
+
+    axios.get(API_URL + "google_api_key", { headers: authHeader() }).then(res => setGoogleApiKey(res.data))
   }, [])
 
-  const onLogout = ()=> {
+  const onLogout = () => {
     AuthService.logout()
     setLogout(false)
     setUsername(null)
@@ -47,7 +54,7 @@ export default function App() {
   }
 
   const switchDays = (value) => {
-    
+
     let idx = currIdx + value
     if (idx < 0) idx = days.length - 1
     if (idx > days.length - 1) idx = 0
@@ -73,10 +80,11 @@ export default function App() {
         setDays={setDays}
         setAlbum={setAlbum} />
 
-      <Map
+      {googleApiKey && <Map
         encodedPolylines={encodedPolylines}
         landmarks={landmarks}
-        showDayTrip={showDayTrip} />
+        showDayTrip={showDayTrip}
+        googleApiKey={googleApiKey} />}
 
       <Schedule
         landmarks={landmarks}

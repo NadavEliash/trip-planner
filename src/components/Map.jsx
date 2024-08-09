@@ -12,9 +12,8 @@ const containerStyle = {
     borderRadius: '1rem'
 };
 
-const apiKey = process.env.REACT_APP_GOOGLE_API_KEY
 
-const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
+const Map = ({ encodedPolylines, landmarks, showDayTrip, googleApiKey }) => {
 
     const [map, setMap] = useState(null)
     const [markers, setMarkers] = useState([])
@@ -78,7 +77,7 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip }) => {
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: apiKey
+        googleMapsApiKey: googleApiKey
     })
 
     const onLoad = useCallback((map) => {

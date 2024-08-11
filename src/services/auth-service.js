@@ -28,14 +28,14 @@ const AuthService = {
       email,
       password
     })
-    .then(response => {
-      if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
+      .then(response => {
+        if (response.data.accessToken) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+        }
 
-      return response.data;
-    })
-},
+        return response.data;
+      })
+  },
 
   getCurrentUser() {
     return JSON.parse(localStorage.getItem("user"));;

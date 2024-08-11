@@ -12,6 +12,8 @@ import AuthService from './services/auth-service';
 import authHeader from './services/auth-header';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_BASE_URL
+
 export default function App() {
   const navigate = useNavigate()
 
@@ -28,8 +30,6 @@ export default function App() {
   const [logout, setLogout] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [dayPreview, setDayPreview] = useState(false)
-
-  const API_URL = process.env.REACT_APP_API_BASE_URL
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'))

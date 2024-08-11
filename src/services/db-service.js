@@ -7,7 +7,7 @@ const DBService = {
 
     async getTrip(destination, startDate, endDate) {
         try {
-            const tripData = axios.post(API_URL + 'api/db/gettrip',
+            const tripData = axios.post(API_URL + "api/db/gettrip",
                 {
                     destination: destination.toLocaleLowerCase(),
                     startDate,
@@ -24,7 +24,7 @@ const DBService = {
 
     async setTrip(tripData) {
         try {
-            axios.post(API_URL + 'api/db/settrip', tripData, { headers: authHeader() })
+            axios.post(API_URL + "api/db/settrip", tripData, { headers: authHeader() })
 
         } catch (error) {
             console.error(error)

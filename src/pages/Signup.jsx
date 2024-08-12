@@ -4,81 +4,58 @@ import { isEmail } from "validator";
 import AuthService from "../services/auth-service";
 import { useNavigate } from "react-router-dom";
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
-
-const validEmail = (value) => {
-  if (!isEmail(value)) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This is not a valid email.
-      </div>
-    );
-  }
-};
-
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 20) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
-      </div>
-    );
-  }
-};
-
-const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
-      </div>
-    );
-  }
-};
 
 const Signup = () => {
-  const form = useRef();
+  const form = useRef()
   const navigate = useNavigate()
-  const checkBtn = useRef();
+  const checkBtn = useRef()
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [successful, setSuccessful] = useState(false);
-  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [successful, setSuccessful] = useState(false)
+  const [message, setMessage] = useState("")
 
   const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
-  };
+    setUsername(e.target.value)
+  }
 
   const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
-  };
+    setEmail(e.target.value)
+  }
 
   const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-  };
+    setPassword(e.target.value)
+  }
 
   const handleRegister = (e) => {
     e.preventDefault();
 
-    setMessage("");
-    setSuccessful(false);
+    if (!username) {
+      setMessage('Please add a valid username')
+      return
+    }
 
-    AuthService.signup(username, email, password).then(
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setMessage('Not a valid email')
+      return
+    }
+
+    if (password.length < 3) {
+      setMessage('Password is too short')
+      return
+    }
+
+    if (username && email && password) {
+
+      setMessage("")
+      setSuccessful(false)
+
+
+      AuthService.signup(username, email, password).then(
         () => {
-          setSuccessful(true);
+          setSuccessful(true)
           navigate("/home")
         },
         (error) => {
@@ -87,12 +64,15 @@ const Signup = () => {
               error.response.data &&
               error.response.data.message) ||
             error.message ||
-            error.toString();
+            error.toString()
 
           setMessage(resMessage)
           setSuccessful(false)
         }
       )
+    } else {
+      return
+    }
   }
 
   return (
@@ -100,7 +80,7 @@ const Signup = () => {
       <div>
         <form onSubmit={handleRegister} ref={form}>
           {!successful && (
-            <div>
+            <div className="form-container">
               <div className="form-group">
                 <label htmlFor="username">Username</label>
                 <input
@@ -109,19 +89,17 @@ const Signup = () => {
                   name="username"
                   value={username}
                   onChange={onChangeUsername}
-                  validations={[required, vusername]}
                 />
               </div>
 
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
-                  type="text"
+                  type="email"
                   className="form-control"
                   name="email"
                   value={email}
                   onChange={onChangeEmail}
-                  validations={[required, validEmail]}
                 />
               </div>
 
@@ -133,7 +111,6 @@ const Signup = () => {
                   name="password"
                   value={password}
                   onChange={onChangePassword}
-                  validations={[required, vpassword]}
                 />
               </div>
 
@@ -144,11 +121,9 @@ const Signup = () => {
           )}
 
           {message && (
-            <div className="form-group">
-              <div
-                className={"alert"}
-                role="alert"
-              >
+            <div className={"alert"} onClick={() => setMessage('')}>
+              <div className="alert-text">
+                <div className="x">✖</div>
                 {message}
               </div>
             </div>

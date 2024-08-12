@@ -32,6 +32,8 @@ export default function App() {
   const [dayPreview, setDayPreview] = useState(false)
 
   useEffect(() => {
+    console.log("Have a pleasant trip")
+
     const user = JSON.parse(localStorage.getItem('user'))
     if (user) setUsername(user.username)
 

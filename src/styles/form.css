@@ -92,9 +92,8 @@
         margin-left: 2rem;
         border-radius: 2rem;
         border: 0;
-        background-color: rgb(180, 215, 255);
         cursor: pointer;
-
+    
         img {
             width: 20px;
             margin-inline: 3px;
@@ -106,8 +105,20 @@
         }
     }
 
-    .button:hover {
+    .can {
+        background-color: rgb(154, 201, 255);
+    }
+
+    .can:hover {
         background-color: rgb(193, 217, 245);
+    }
+
+    .cannot {
+        background: #e4e4e4;
+
+        img {
+            opacity: .5;
+        }
     }
 
     .recommendations {
@@ -149,14 +160,22 @@
     position: absolute;
     width: 100vw;
     height: 100svh;
-    background: rgba(235, 234, 234, .7);
+    background: rgba(235, 234, 234, .8);
     left: 0;
     top: 0;
     z-index: 50;
 
+    img {
+        position: absolute;
+        left: 50vw;
+        top: 50svh;
+        translate: -50% -50%;
+        width: 70%;
+    }
+
     .text {
         position: absolute;
-        top: 40vh;
+        top: 25vh;
         left: 50vw;
         translate: -50%;
     }

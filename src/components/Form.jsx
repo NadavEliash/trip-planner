@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Menu, MenuItem } from '@mui/material'
 import TripService from '../services/trip-service'
 import DBService from '../services/db-service'
@@ -13,6 +13,8 @@ export default function Form({
   setAlbum
 }) {
 
+  const [fields, setFields] = useState({ destination: null, from: null, to: null })
+  const [canSubmit, setCanSubmit] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const [checkedItems, setCheckedItems] = useState({
     eat: false,
@@ -21,6 +23,10 @@ export default function Form({
     history: false,
     kids: false
   })
+
+  useEffect(() => {
+    setCanSubmit(Object.values(fields).every(Boolean))
+  }, [fields])
 
   let dbDays = []
   let dbAlbum = []
@@ -43,6 +49,7 @@ export default function Form({
         const options = getOptions()
         if (options && options !== savedTrip.options) {
           setIsLoading(true)
+
           const newDays = await Promise.all(savedTrip.days.map(async (day) => {
             const recommendations = await TripService.getRecommendations(day.day.date, day.trip.places, options);
             day.trip.recommendations = recommendations;
@@ -60,6 +67,7 @@ export default function Form({
         setDayPreview(true)
 
       } else {
+        
         try {
           setIsLoading(true)
           const trip = await TripService.getTripData(e.target[0].value, e.target[1].value, e.target[2].value)
@@ -153,6 +161,7 @@ export default function Form({
 
     return sortedDays
   }
+
   const toggleRecommendations = (key) => {
     const value = checkedItems[key]
     setCheckedItems(prev => ({ ...prev, [key]: !value }))
@@ -174,19 +183,25 @@ export default function Form({
     return options
   }
 
+  const handleChanges = (e) => {
+    const name = e.target.name
+    const value = e.target.value
+    setFields(prev => ({ ...prev, [name]: value }))
+  }
+
   return (
     <div>
       <form className='form' onSubmit={onSubmit}>
         <div className='main-form'>
-          <input type="text" name='destination' placeholder='I want to travel to' className='destination-input' />
+          <input type="text" name='destination' placeholder='I want to travel to' className='destination-input' onChange={handleChanges} />
           <div className='dates-container'>
             <div className='dates'>
               <label className='label' htmlFor="from">from:</label>
-              <input type="date" name='from' className='date-input' />
+              <input type="date" name='from' className='date-input' onChange={handleChanges} />
             </div>
             <div className='dates'>
               <label className='label' htmlFor="to">to:</label>
-              <input type="date" name='to' className='date-input' />
+              <input type="date" name='to' className='date-input' onChange={handleChanges} />
             </div>
           </div>
           <div className='recommendations' onClick={(e) => { setAnchorEl(e.target) }}><span className='plus'>➕</span><span className='add'>Add recommendations</span></div>
@@ -197,7 +212,7 @@ export default function Form({
             <MenuItem sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => toggleRecommendations('history')}>Historic sites<span className='checked'>{checkedItems.history ? '✔' : ''}</span></MenuItem>
             <MenuItem sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => toggleRecommendations('kids')}>Kids activities<span className='checked'>{checkedItems.kids ? '✔' : ''}</span></MenuItem>
           </Menu>
-          <button className='button'><img src="./send.svg" alt="send" /></button>
+          <button className={`button ${canSubmit ? "can" : "cannot"}`}><img src="./send.svg" alt="send" /></button>
         </div>
       </form>
     </div>

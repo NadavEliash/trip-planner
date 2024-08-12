@@ -11,7 +11,6 @@ export default function DayPreview({ day, setDay, days, album }) {
                 album.find(item => item?.name === place)
             ).filter(item => item !== undefined && item !== null)
 
-            console.log(newPlaces)
             if (newPlaces.length) setPlaces(newPlaces)
             setTrip(day.trip)
         }

@@ -1,20 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-// import Form from "react-validation/build/form";
-// import Input from "react-validation/build/input";
-// import CheckButton from "react-validation/build/button";
-
 import AuthService from "../services/auth-service";
-
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
 
 const Login = () => {
   let navigate = useNavigate();
@@ -22,10 +8,10 @@ const Login = () => {
   const form = useRef();
   const checkBtn = useRef();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState("")
 
   const onChangeUsername = (e) => {
     const username = e.target.value
@@ -40,30 +26,35 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    setMessage("")
-    setLoading(true)
+    if (username && password) {
 
-    AuthService.login(username, password).then(
-      () => {
-        navigate("/home")
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString()
+      setMessage("")
+      setLoading(true)
 
-        setLoading(false)
-        setMessage(resMessage)
-      }
-    )
+      AuthService.login(username, password).then(
+        () => {
+          navigate("/home")
+        },
+        (error) => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString()
+
+          setLoading(false)
+          setMessage(resMessage)
+        }
+      )
+    } else {
+      return
+    }
   }
 
   return (
     <div className="auth">
-      <div>
+      <div className="form-container">
         <form onSubmit={handleLogin} ref={form}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
@@ -73,7 +64,6 @@ const Login = () => {
               name="username"
               value={username}
               onChange={onChangeUsername}
-              validations={[required]}
             />
           </div>
 
@@ -85,22 +75,22 @@ const Login = () => {
               name="password"
               value={password}
               onChange={onChangePassword}
-              validations={[required]}
             />
           </div>
 
 
           <button className="auth-btn" disabled={loading}>
-            {loading && (
-              <span className="spinner"></span>
-            )}
-            <span>Login</span>
+            {loading ?
+              <div className="spinner"></div>
+              : <span>Login</span>
+            }
           </button>
 
 
           {message && (
-            <div className="form-group">
-              <div className="alert" role="alert">
+            <div className={"alert"} onClick={() => setMessage('')}>
+              <div className="alert-text">
+                <div className="x">✖</div>
                 {message}
               </div>
             </div>

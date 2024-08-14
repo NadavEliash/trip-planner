@@ -7,7 +7,7 @@
     
     .land-btn {
         cursor: pointer;
-        background: #f3f3f3;
+        background: var(--button-color);
         border: 1px solid black;
         width: 200px;
         padding: .8rem;
@@ -16,7 +16,7 @@
     }
 
     .land-btn:hover {
-        background: #cfcfcf;
+        background: var(--hover-color);
     }
 
     .land-img {
@@ -31,7 +31,7 @@
     width: 400px;
     padding-block: 2rem;
     border: 1px solid rgb(168, 168, 168);
-    border-radius: 4rem;
+    border-radius: 2rem;
 
     @media(max-width: 400px) {
         margin-inline: 3vw;
@@ -73,14 +73,15 @@
         translate: -50%;
         padding: 10px;
         width: 200px;
-        border-radius: 1rem;
+        border-radius: 2rem;
         border: 0;
         cursor: pointer;
-        background: #dddddd;
+        background: var(--button-color);
+        color: var(--text-color);
     }
 
     .auth-btn:hover {
-        background-color: rgb(193, 217, 245);
+        background: var(--hover-color);
     }
 
     .alert {
@@ -90,9 +91,8 @@
         width: 100vw;
         height: 100svh;
         margin-inline: auto;
-        background: rgba(255,255,255, .7);
+        background-color: var(--background-color);     
         
-
         .alert-text {
             top: 30%;
             left: 50%;
@@ -103,8 +103,9 @@
             padding: 2.5rem;
             padding-inline: 2rem;
             border-radius: 1rem;
-            background-color: white;
-
+            background: var(--background-color);
+            color: var(--text-color);
+            
             .x {
                 right: 12px;
                 top: 8px;

@@ -49,17 +49,21 @@
     left: 50vw;
     top: 50svh;
     translate: -50% -50%;
-    background: rgb(246, 248, 255);
+    background: var(--background-color);
     border: 1px solid rgb(170, 170, 170);
-    width: clamp(280px, 92vw, 1010px);
-    height: 93svh;
+    width: clamp(280px, 92vw, 1020px);
+    height: 92svh;
     z-index: 20;
     border-radius: 1rem;
     padding: 1rem;
     padding-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
 
     @media(max-width: 600px) {
         height: 97svh;
+        gap: 0;
     }
 
     .x {
@@ -76,30 +80,37 @@
         font-size: 1.3rem;
         font-weight: 700;
         padding-bottom: 1rem;
-        padding-inline: 2rem;
+        padding-inline: 3rem;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 5px;
-        background: rgb(246, 248, 255);
+        background: var(--background-color);
         z-index: 40;
         width: 100%;
         left: 0;
-        top: 3.5rem;
+        top: 3.3rem;
+
+        
+        @media(max-width: 600px) {
+            padding-inline: .5rem;
+            font-size: 1.1rem;
+        }
 
         .to-place {
             display: flex;
         }
-
-        @media(max-width: 600px) {
-            font-size: 1.1rem;
-        }
     }
 
     .description {
-        margin-block: 4.5rem;
+        margin-top: 5rem;
+        margin-bottom: 3rem;
         margin-inline: 1rem;
         text-align: justify;
+
+        @media (max-width: 600px) {
+            margin-top: 6rem;
+        }
     }
 
 }
@@ -109,6 +120,11 @@
     margin-top: 3.5rem;
     height: 92%;
     padding: .5rem;
+    padding-right: 1rem;
+    
+    @media(max-width: 600px) {
+        padding-right: 0;
+    }
 }
 
 .day-story-container::-webkit-scrollbar {
@@ -140,12 +156,12 @@
         position: relative;
         overflow: hidden;
         cursor: pointer;
+        border-radius: 1rem 1rem 0 0;
+        background: var(--photo-background);
+        padding: .5rem;
 
         @media(max-width: 600px) {
             flex-direction: column;
-            padding: .5rem;
-            border-radius: 1rem 1rem 0 0;
-            background: #d7e2f8;
         }
     }
 
@@ -153,11 +169,7 @@
         border-radius: .5rem;
         width: 100%;
         margin: 0;
-        margin-top: 10px;
         border-radius: .5rem;
-        -webkit-box-shadow: -1px 11px 24px -8px rgba(0, 0, 0, .3);
-        -moz-box-shadow: -1px 11px 24px -8px rgba(0, 0, 0, .3);
-        box-shadow: -1px 11px 24px -8px rgba(0, 0, 0, .3);
     }
 
     .place-name {
@@ -165,9 +177,12 @@
         width: 100%;
         padding-block: 5px;
         text-align: center;
-        margin-block: 5px;
+        margin-block: 0;
         margin-inline: auto;
-        background: #e3e3eb;
+        padding-block: .5rem;
+        background: var(--photo-background);
+        border-radius: 0 0 1rem 1rem;
+
     }
 
 }
@@ -199,7 +214,9 @@
     }
 
     .dot {
-        font-size: 6px;
+        font-size: 1rem;
+        margin-top: -.1rem;
+        color: var(--text-color);
     }
 }
 
@@ -210,7 +227,7 @@
     left: 0;
     top: 0;
     z-index: 50;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--background-color);
 
     @media(max-width: 600px) {
         display: none;
@@ -234,17 +251,15 @@
 
         img {
             max-height: 80vh;
-
             max-width: 80vw;
-            border-radius: 2rem 2rem 0 0;
+            border-radius: 1rem;
         }
     }
 
     .photo-name {
         font-size: 1.5rem;
+        font-weight: 600;
         min-width: 60%;
-        background: #e9e9f5;
-        border-radius: 0 0 2rem 2rem;
         height: 3rem;
         text-align: center;
     }
@@ -255,20 +270,10 @@
 }
 
 .switch-day {
-    position: absolute;
-    top: 50svh;
-    translate: 0 -50%;
     cursor: pointer;
-    width: max(3rem, 6vw);
-    border-radius: .5rem;
-    z-index: 30;
-    background: rgba(255, 255, 255, 0.9);
-}
+    font-size: 3rem;
+    z-index: 40;
 
-.switch-day:first-child {
-    left: .5vw;
-}
-
-.switch-day:last-child {
-    right: .5vw;
+    margin:0;
+    padding:0;
 }

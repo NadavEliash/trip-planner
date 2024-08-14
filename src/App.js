@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 import AuthService from './services/auth-service';
 import authHeader from './services/auth-header';
 import axios from 'axios';
+import UserService from './services/user-service';
+import MapService from './services/map-service';
 
 const API_URL = process.env.REACT_APP_API_BASE_URL
 
@@ -27,7 +29,10 @@ export default function App() {
   const [album, setAlbum] = useState([])
 
   const [username, setUsername] = useState(null)
-  const [logout, setLogout] = useState(false)
+  const [userBar, setUserBar] = useState(false)
+  const [userTrip, setUserTrip] = useState(null)
+  const [userTrips, setUserTrips] = useState([])
+  const [showUserTrips, setShowUserTrips] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [dayPreview, setDayPreview] = useState(false)
 
@@ -42,8 +47,46 @@ export default function App() {
 
   const onLogout = () => {
     AuthService.logout()
-    setLogout(false)
+    setUserBar(false)
     setUsername(null)
+  }
+
+  const onMyTrips = async () => {
+    if (showUserTrips) {
+      setShowUserTrips(false)
+    } else {
+      setShowUserTrips("load")
+      const data = await UserService.getUserTrips(username)
+      let trips = []
+      if (data?.length > 0) {
+        data.forEach(trip => {
+          trips.push(
+            {
+              destination: `${trip.destination[0].toUpperCase() + trip.destination.slice(1)}`,
+              from: `${trip.startDate.slice(8, 10)}/${trip.startDate.slice(5, 7)}`,
+              to: `${trip.endDate.slice(8, 10)}/${trip.endDate.slice(5, 7)}`,
+              data: trip
+            })
+        }
+        )
+      }
+
+      if (trips.length > 0) {
+        setShowUserTrips(true)
+        setUserTrips(trips)
+      }
+    }
+  }
+
+  const onUserTrip = (userTrip) => {
+    setShowUserTrips(false)
+    setUserTrip(userTrip)
+    setLandmarks(userTrip.data.trip.landmarks)
+    const polylines = MapService.createRoutes(userTrip.data.trip.routes)
+    setEncodedPolylines(polylines)
+    setDays(userTrip.data.days)
+    setAlbum(userTrip.data.album)
+    setDayPreview(true)
   }
 
   const showDayTrip = (date) => {
@@ -68,8 +111,21 @@ export default function App() {
   return (
     <div className="home">
       {username
-        ? <div className='hello-user' onClick={() => setLogout(!logout)}>Hello {username}
-          {logout && <div className='logout' onClick={onLogout}>Log out</div>}
+        ? <div >
+          <div className='hello-user' onClick={() => setUserBar(!userBar)}>🌏 {username} </div>
+          {userBar &&
+            <div className='logout' onClick={onLogout}>Log out</div>
+          }
+          {<div>
+            <div className='user-trips'>
+              <div className='my-trips' onClick={onMyTrips}><span className={`${showUserTrips === "load" ? 'hidden' : ''}`}>✈</span> My Trips</div>
+              <div className={`${showUserTrips === "load" ? 'loader' : 'hidden'}`}></div>
+              {showUserTrips === true && userTrips && userTrips.map(trip =>
+                <div className='user-trip' key={trip.destination} onClick={() => onUserTrip(trip)}>{trip.destination}<span>{trip.from}-{trip.to}</span></div>
+              )}
+            </div>
+          </div>
+          }
         </div>
         : <div className='hello-user' onClick={() => navigate('/')}>Log in</div>}
       <h1 className='title'>Trip Planner</h1>
@@ -80,7 +136,8 @@ export default function App() {
         setLandmarks={setLandmarks}
         setEncodedPolylines={setEncodedPolylines}
         setDays={setDays}
-        setAlbum={setAlbum} />
+        setAlbum={setAlbum}
+        userTrip={userTrip} />
 
       {googleApiKey && <Map
         encodedPolylines={encodedPolylines}
@@ -94,15 +151,12 @@ export default function App() {
         days={days} />
 
       {day && dayPreview &&
-        <div>
-          <img className='switch-day' onClick={() => { switchDays(-1) }} src="./left.svg" alt='left' />
-          <DayPreview
-            day={day}
-            setDay={setDay}
-            days={days}
-            album={album} />
-          <img className='switch-day' onClick={() => { switchDays(1) }} src="./right.svg" alt='right' />
-        </div>}
+        <DayPreview
+          switchDays={switchDays}
+          day={day}
+          setDay={setDay}
+          days={days}
+          album={album} />}
 
       {isLoading && <Loader />}
       {isError && <NotFound setIsError={setIsError} />}

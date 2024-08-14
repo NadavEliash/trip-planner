@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Menu, MenuItem } from '@mui/material'
 import TripService from '../services/trip-service'
 import DBService from '../services/db-service'
+import { DateRange } from 'react-date-range'
+import 'react-date-range/dist/styles.css'
+import 'react-date-range/dist/theme/default.css'
+import MapService from '../services/map-service'
+
 
 export default function Form({
   setIsLoading,
@@ -10,10 +15,15 @@ export default function Form({
   setLandmarks,
   setEncodedPolylines,
   setDays,
-  setAlbum
+  setAlbum,
+  userTrip
 }) {
 
-  const [fields, setFields] = useState({ destination: null, from: null, to: null })
+  const [destination, setDestination] = useState('')
+  const [range, setRange] = useState([{ startDate: null, endDate: null, key: 'selection' }])
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [showDates, setShowDates] = useState(false)
   const [canSubmit, setCanSubmit] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const [checkedItems, setCheckedItems] = useState({
@@ -25,26 +35,44 @@ export default function Form({
   })
 
   useEffect(() => {
-    setCanSubmit(Object.values(fields).every(Boolean))
-  }, [fields])
+    if (userTrip) {
+      setDestination(userTrip.destination)
+      setStartDate(userTrip.from)
+      setEndDate(userTrip.to)
+    }
+  }, [userTrip])
+
+  useEffect(() => {    
+    setStartDate(getShortDate(range[0].startDate))
+    setEndDate(getShortDate(range[0].endDate))
+  }, [range])
+
+  useEffect(() => {
+    setCanSubmit(!!destination && !!range[0].startDate && !!range[0].endDate)
+  }, [range, destination])
 
   let dbDays = []
   let dbAlbum = []
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    if (e.target[0].value && e.target[1].value && e.target[2].value) {
+    if (e.target[0].value && startDate && endDate) {
 
       setLandmarks([])
       setEncodedPolylines([])
       setDays([])
 
-      const savedTrip = await DBService.getTrip(e.target[0].value, e.target[1].value, e.target[2].value)
+
+      const fullStartDate = `${range[0].startDate.getFullYear()}-${((range[0].startDate?.getMonth() + 1)+"").padStart(2,0)}-${(range[0].startDate?.getDate()+"").padStart(2,0)}`
+      const fullEndDate = `${range[0].endDate.getFullYear()}-${((range[0].endDate?.getMonth() + 1)+"").padStart(2,0)}-${(range[0].endDate?.getDate()+"").padStart(2,0)}`
+
+      const savedTrip = await DBService.getTrip(e.target[0].value, fullStartDate, fullEndDate)
 
       if (savedTrip) {
 
         setLandmarks(savedTrip.trip.landmarks)
-        createRoutes(savedTrip.trip.routes)
+        const polylines = MapService.createRoutes(savedTrip.trip.routes)
+        setEncodedPolylines(polylines)
 
         const options = getOptions()
         if (options && options !== savedTrip.options) {
@@ -67,14 +95,14 @@ export default function Form({
         setDayPreview(true)
 
       } else {
-        
         try {
           setIsLoading(true)
-          const trip = await TripService.getTripData(e.target[0].value, e.target[1].value, e.target[2].value)
+          const trip = await TripService.getTripData(e.target[0].value, fullStartDate, fullEndDate)
 
           const landmarks = trip.landmarks
           setLandmarks(landmarks)
-          createRoutes(trip.routes)
+          const polylines = MapService.createRoutes(trip.routes)
+          setEncodedPolylines(polylines)
 
           let landmarksByDay = []
 
@@ -113,10 +141,12 @@ export default function Form({
           setDays(prev => sortDays(prev))
           setDayPreview(true)
 
+          const user = JSON.parse(localStorage.getItem('user'))
           TripService.setTripData(
+            user?.username,
             e.target[0].value,
-            e.target[1].value,
-            e.target[2].value,
+            startDate,
+            endDate,
             options,
             trip,
             sortDays(dbDays),
@@ -134,21 +164,6 @@ export default function Form({
     } else {
       return
     }
-  }
-
-  const createRoutes = (routes) => {
-    let polylines = []
-
-    for (let i = 0; i < routes.length; i++) {
-      if (routes[i]) {
-        const route = JSON.parse(routes[i])
-        if (route.routes && route.routes.length) {
-          polylines.push(route.routes[0].polyline.encodedPolyline)
-        }
-      }
-    }
-
-    setEncodedPolylines(polylines)
   }
 
   const sortDays = (days) => {
@@ -183,28 +198,41 @@ export default function Form({
     return options
   }
 
-  const handleChanges = (e) => {
-    const name = e.target.name
-    const value = e.target.value
-    setFields(prev => ({ ...prev, [name]: value }))
+  const getShortDate = (date) => {
+    if (date) {
+      const day = date.getDate() + ""
+      const month = (date.getMonth() + 1) + ""
+      
+      return day.padStart(2,0) + "/" + month.padStart(2,0)
+    } else {
+      return '--/--'
+    }
   }
 
   return (
     <div>
       <form className='form' onSubmit={onSubmit}>
         <div className='main-form'>
-          <input type="text" name='destination' placeholder='I want to travel to' className='destination-input' onChange={handleChanges} />
+          <input type="text" name='destination' placeholder='Where:' value={destination} className='destination-input' onChange={(e) => setDestination(e.target.value)} />
           <div className='dates-container'>
-            <div className='dates'>
-              <label className='label' htmlFor="from">from:</label>
-              <input type="date" name='from' className='date-input' onChange={handleChanges} />
+            <div className='dates-preview'>
+              <div className='date' onClick={() => setShowDates(true)}><span className='from'>From: </span>{startDate}</div>
+              <div className='dash'>–</div>
+              <div className='date' onClick={() => setShowDates(true)}><span className='to'>To: </span>{endDate}</div>
             </div>
             <div className='dates'>
-              <label className='label' htmlFor="to">to:</label>
-              <input type="date" name='to' className='date-input' onChange={handleChanges} />
+              {showDates && <DateRange
+                editableDateInputs={true}
+                onChange={item => setRange([item.selection])}
+                onRangeFocusChange={(e) => setShowDates(!!e[1])}
+                moveRangeOnFirstSelection={false}
+                ranges={range}
+                endDatePlaceholder='To:'
+                startDatePlaceholder='From:'
+              />}
             </div>
           </div>
-          <div className='recommendations' onClick={(e) => { setAnchorEl(e.target) }}><span className='plus'>➕</span><span className='add'>Add recommendations</span></div>
+          <div className='recommendations' onClick={(e) => { setAnchorEl(e.target) }}>Add interests</div>
           <Menu sx={{ left: '3px' }} open={anchorEl ? true : false} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
             <MenuItem sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => toggleRecommendations('eat')}>Places to eat<span className='checked'>{checkedItems.eat ? '✔' : ''}</span></MenuItem>
             <MenuItem sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => toggleRecommendations('attraction')}>Attractions<span className='checked'>{checkedItems.attraction ? '✔' : ''}</span></MenuItem>

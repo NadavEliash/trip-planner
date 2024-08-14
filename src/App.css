@@ -3,7 +3,6 @@
 @import "./styles/loader.css";
 @import "./styles/auth.css";
 
-
 html {
   margin: 0;
   padding: 0;
@@ -11,6 +10,23 @@ html {
   width: 100vw;
   box-sizing: border-box;
   text-align: center;
+}
+
+:root {
+  --background-color: white;
+  --text-color: black;
+  --button-color: rgb(228, 228, 228);
+  --hover-color: rgb(200, 215, 243);
+  --photo-background: #d7e2f8;
+}
+
+[data-theme="dark"] {
+  --background-color: rgb(26, 34, 58);
+  --text-color: rgba(240, 240, 240, 0.87);
+  --button-color: rgb(70, 67, 90);
+  --hover-color: rgba(90, 105, 146, 0.822);
+  --photo-background: #0b1220;
+  --filter: invert()
 }
 
 body {
@@ -21,31 +37,144 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.theme-title {
+  position: absolute;
+  top: 0;
+  right: 3.7rem;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.theme {
+  position: absolute;
+  right: 1rem;
+  top: 10px;
+  width: 2rem;
+  height: .5rem;
+  border: 1px solid var(--text-color);
+  border-radius: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  padding: 6px;
+  padding-inline: 3px;
+  display: flex;
+  align-items: center;
+
+  .toggle {
+    width: 18px;
+    height: 16px;
+    left: 0;
+    top: 0;
+    border-radius: 1rem;
+    transition: .5s;
+    color: rgb(228, 228, 0);
+    background-color: rgb(102, 173, 240);
+
+    p {
+      margin-top: -4px;
+    }
+  }
+
+  .dark {
+    background-color: var(--text-color);
+    margin-left: 16px;
+    transition: .5s;
+    color: transparent;
+  }
+
 }
 
 .home {
   position: absolute;
-  margin: 0;  
+  margin: 0;
   height: 100svh;
   width: 100vw;
 }
 
-.hello-user {
+.hello-user,
+.user-trips {
+  left: 0;
+  top: 0;
   margin: 0;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  font-family: monospace;
   font-weight: 600;
+  font-size: large;
+  width: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  padding: .5rem;
   cursor: pointer;
+  text-align: start;
+
+  .user-trip {
+    border: 2px solid var(--text-color);
+    border-radius: 4px;
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+    z-index: 20;
+    background-color: var(--background-color);
+  }
+
+  .user-trip:hover {
+    background: rgb(161, 166, 177);
+    color: var(--background-color);
+  }
 }
 
 .logout {
-  margin-top: 10px;
-  margin-left: 10px;
-  border: 1px solid black;
-  border-radius: 6px;
-  padding: 6px;
-  padding-top: 2px;
+  border: 2px solid var(--text-color);
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: 600;
+  position: absolute;
+  top: 2.2rem;
+  left: 2.2rem;
+  cursor: pointer;
+  background-color: var(--background-color);
+  padding: 10px;
+  padding-inline: 6px;
+  border-radius: 3px;
+  z-index: 20;
+}
+
+.logout:hover {
+  background: rgb(161, 166, 177);
+  color: var(--background-color);
+}
+
+.user-trips {
+  width: 12rem;
+  left: 7rem;
+
+  @media(max-width: 480px) {
+    left: 5.5rem;
+  }
+}
+
+.my-trips.load {
+  display: none;
+}
+
+.loader {
+  position: absolute;
+  top: 12px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--text-color);
+  border-bottom: 0;
+  animation: loader .5s linear infinite;
+}
+
+.hidden {
+  color: transparent;
 }
 
 .title {

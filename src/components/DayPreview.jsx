@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export default function DayPreview({ day, setDay, days, album }) {
+export default function DayPreview({ switchDays, day, setDay, days, album }) {
     const [trip, setTrip] = useState([])
     const [places, setPlaces] = useState([])
     const [largePhoto, setLargePhoto] = useState(null)
@@ -29,6 +29,7 @@ export default function DayPreview({ day, setDay, days, album }) {
             </div>}
             <div className='day-story-main'>
                 <div className='x' onClick={() => setDay(null)}>✖</div>
+                <div className='switch-day' onClick={() => { switchDays(-1) }}>‹</div>
                 <div className='day-story-container'>
                     {day?.day && places[0]?.name && <div className='day-preview-title'>{day.day.date}: To
                         {places.length > 0 && places.map((place, idx) =>
@@ -56,12 +57,14 @@ export default function DayPreview({ day, setDay, days, album }) {
                         {trip.recommendations?.length && <h3>Recommendation for you: </h3>}
                         {Array.isArray(trip.recommendations) && trip.recommendations.length && trip.recommendations.map((recommendation, idx) =>
                             <div key={idx} className='recommended-li'>
-                                <div className='dot'>⚫</div>
+                                <div className='dot'>°</div>
                                 <p>{recommendation}</p>
                             </div>)}
                     </div>
                 </div>
+                <div className='switch-day' onClick={() => { switchDays(1) }}>›</div>
             </div>
+
         </>
     )
 }

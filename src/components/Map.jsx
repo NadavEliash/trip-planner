@@ -33,6 +33,7 @@ const Map = ({ encodedPolylines, landmarks, showDayTrip, googleApiKey }) => {
 
     useEffect(() => {
         setPaths([])
+        setMap(null)
         const decodedPaths = encodedPolylines.map(encodedPath => polyline.decode(encodedPath).map(([lat, lng]) => ({ lat, lng })))
         setPaths(decodedPaths)
 

@@ -4,8 +4,8 @@
         top: 0;
         width: 100vw;
         height: 100svh;
-        background: white;
-        opacity: 0.9;
+        background: var(--background-color);
+        opacity: .9;
         z-index: 30;
     }
 
@@ -20,7 +20,8 @@
     }
 
     .plane {
-        width: 150px;
+        width: 200px;
+        opacity: .8;
         position: absolute;
         z-index: 40;
         animation: 10s infinite normal slide;
@@ -30,11 +31,39 @@
     @keyframes slide {
         0% {
             left: 10vw;
-            bottom: 35svh;
+            bottom: 33svh;
         }
 
         100% {
             left: 80vw;
-            bottom: 45svh;
+            bottom: 42svh;
+        }
+    }
+
+
+    .not-found {
+        position: absolute;
+        width: 100vw;
+        height: 100svh;
+        background: var(--background-color);
+        opacity: .9;
+        left: 0;
+        top: 0;
+        z-index: 50;
+
+        img {
+            position: absolute;
+            left: 50vw;
+            top: 50svh;
+            translate: -50% -50%;
+            width: 70%;
+            filter: var(--filter)
+        }
+
+        .text {
+            position: absolute;
+            top: 25vh;
+            left: 50vw;
+            translate: -50%;
         }
     }

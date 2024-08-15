@@ -16,7 +16,9 @@ export default function Form({
   setEncodedPolylines,
   setDays,
   setAlbum,
-  userTrip
+  userTrip,
+  formMinHeight,
+  setFormMinHeight
 }) {
 
   const [destination, setDestination] = useState('')
@@ -42,7 +44,7 @@ export default function Form({
     }
   }, [userTrip])
 
-  useEffect(() => {    
+  useEffect(() => {
     setStartDate(getShortDate(range[0].startDate))
     setEndDate(getShortDate(range[0].endDate))
   }, [range])
@@ -56,6 +58,7 @@ export default function Form({
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    setFormMinHeight(true)
     if (e.target[0].value && startDate && endDate) {
 
       setLandmarks([])
@@ -63,8 +66,8 @@ export default function Form({
       setDays([])
 
 
-      const fullStartDate = `${range[0].startDate.getFullYear()}-${((range[0].startDate?.getMonth() + 1)+"").padStart(2,0)}-${(range[0].startDate?.getDate()+"").padStart(2,0)}`
-      const fullEndDate = `${range[0].endDate.getFullYear()}-${((range[0].endDate?.getMonth() + 1)+"").padStart(2,0)}-${(range[0].endDate?.getDate()+"").padStart(2,0)}`
+      const fullStartDate = `${range[0].startDate.getFullYear()}-${((range[0].startDate?.getMonth() + 1) + "").padStart(2, 0)}-${(range[0].startDate?.getDate() + "").padStart(2, 0)}`
+      const fullEndDate = `${range[0].endDate.getFullYear()}-${((range[0].endDate?.getMonth() + 1) + "").padStart(2, 0)}-${(range[0].endDate?.getDate() + "").padStart(2, 0)}`
 
       const savedTrip = await DBService.getTrip(e.target[0].value, fullStartDate, fullEndDate)
 
@@ -202,8 +205,8 @@ export default function Form({
     if (date) {
       const day = date.getDate() + ""
       const month = (date.getMonth() + 1) + ""
-      
-      return day.padStart(2,0) + "/" + month.padStart(2,0)
+
+      return day.padStart(2, 0) + "/" + month.padStart(2, 0)
     } else {
       return '--/--'
     }
@@ -212,7 +215,7 @@ export default function Form({
   return (
     <div>
       <form className='form' onSubmit={onSubmit}>
-        <div className='main-form'>
+        <div className={`main-form ${formMinHeight ? 'mobile-form' : ''}`} onClick={()=>setFormMinHeight(false)}>
           <input type="text" name='destination' placeholder='Where:' value={destination} className='destination-input' onChange={(e) => setDestination(e.target.value)} />
           <div className='dates-container'>
             <div className='dates-preview'>

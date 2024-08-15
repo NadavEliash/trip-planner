@@ -73,9 +73,17 @@ body {
     transition: .5s;
     color: rgb(228, 228, 0);
     background-color: rgb(102, 173, 240);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    p {
-      margin-top: -4px;
+    svg {
+      width: 12px;
+
+    }
+    
+    .hide {
+      display: none;
     }
   }
 
@@ -132,6 +140,7 @@ body {
   border: 2px solid var(--text-color);
   border-radius: 4px;
   font-family: monospace;
+  font-size: larger;
   font-weight: 600;
   position: absolute;
   top: 2.2rem;
@@ -139,7 +148,6 @@ body {
   cursor: pointer;
   background-color: var(--background-color);
   padding: 10px;
-  padding-inline: 6px;
   border-radius: 3px;
   z-index: 20;
 }
@@ -184,6 +192,11 @@ body {
   font-style: normal;
   font-size: 2.5rem;
   text-align: center;
+
+  @media(max-width: 480px) {
+    margin-top: 4rem;
+  }
+
 }
 
 .oops {

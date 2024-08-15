@@ -35,6 +35,8 @@ export default function App() {
   const [showUserTrips, setShowUserTrips] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [dayPreview, setDayPreview] = useState(false)
+  const [formMinHeight, setFormMinHeight] = useState(true)
+
 
   useEffect(() => {
     console.log("Have a pleasant trip")
@@ -80,6 +82,7 @@ export default function App() {
 
   const onUserTrip = (userTrip) => {
     setShowUserTrips(false)
+    setFormMinHeight(true)
     setUserTrip(userTrip)
     setLandmarks(userTrip.data.trip.landmarks)
     const polylines = MapService.createRoutes(userTrip.data.trip.routes)
@@ -137,7 +140,14 @@ export default function App() {
         setEncodedPolylines={setEncodedPolylines}
         setDays={setDays}
         setAlbum={setAlbum}
-        userTrip={userTrip} />
+        userTrip={userTrip}
+        formMinHeight={formMinHeight}
+        setFormMinHeight={setFormMinHeight} />
+
+      {days.length > 0 && <Schedule
+        landmarks={landmarks}
+        showDayTrip={showDayTrip}
+        days={days} />}
 
       {googleApiKey && <Map
         encodedPolylines={encodedPolylines}
@@ -145,10 +155,6 @@ export default function App() {
         showDayTrip={showDayTrip}
         googleApiKey={googleApiKey} />}
 
-      <Schedule
-        landmarks={landmarks}
-        showDayTrip={showDayTrip}
-        days={days} />
 
       {day && dayPreview &&
         <DayPreview

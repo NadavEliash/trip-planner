@@ -34,9 +34,10 @@ const TripService = {
         }
     },
 
-    async setTripData(destination, startDate, endDate, options, trip, days, album) {
+    async setTripData(username, destination, startDate, endDate, options, trip, days, album) {
 
         const tripData = {
+            username,
             destination: destination.toLocaleLowerCase(),
             startDate,
             endDate,

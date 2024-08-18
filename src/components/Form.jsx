@@ -18,7 +18,8 @@ export default function Form({
   setAlbum,
   userTrip,
   formMinHeight,
-  setFormMinHeight
+  setFormMinHeight,
+  username
 }) {
 
   const [destination, setDestination] = useState('')
@@ -144,12 +145,11 @@ export default function Form({
           setDays(prev => sortDays(prev))
           setDayPreview(true)
 
-          const user = JSON.parse(localStorage.getItem('user'))
           TripService.setTripData(
-            user?.username,
+            username,
             e.target[0].value,
-            startDate,
-            endDate,
+            fullStartDate,
+            fullEndDate,
             options,
             trip,
             sortDays(dbDays),

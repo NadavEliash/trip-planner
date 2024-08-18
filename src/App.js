@@ -144,7 +144,8 @@ export default function App() {
         setAlbum={setAlbum}
         userTrip={userTrip}
         formMinHeight={formMinHeight}
-        setFormMinHeight={setFormMinHeight} />
+        setFormMinHeight={setFormMinHeight}
+        username={username} />
 
       {days.length > 0 && <Schedule
         landmarks={landmarks}

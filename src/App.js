@@ -71,6 +71,8 @@ export default function App() {
             })
         }
         )
+      } else {
+        setShowUserTrips(false)
       }
 
       if (trips.length > 0) {
@@ -122,7 +124,7 @@ export default function App() {
           {<div>
             <div className='user-trips'>
               <div className='my-trips' onClick={onMyTrips}><span className={`${showUserTrips === "load" ? 'hidden' : ''}`}>✈</span> My Trips</div>
-              <div className={`${showUserTrips === "load" ? 'loader' : 'hidden'}`}></div>
+              <div className={`${showUserTrips === "load" ? 'spin' : 'hidden'}`}></div>
               {showUserTrips === true && userTrips && userTrips.map(trip =>
                 <div className='user-trip' key={trip.destination} onClick={() => onUserTrip(trip)}>{trip.destination}<span>{trip.from}-{trip.to}</span></div>
               )}

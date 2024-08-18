@@ -17,6 +17,10 @@
         font-size: 2.5rem;
         font-weight: 700;
         text-align: center;
+
+        @media (max-width:480px) {
+            font-size: 1.8rem;
+        }
     }
 
     .plane {
@@ -25,6 +29,14 @@
         position: absolute;
         z-index: 40;
         animation: 10s infinite normal slide;
+
+        @media (max-width:768px) {
+            width: 130px;
+        }
+        
+        @media (max-width:480px) {
+            width: 90px;
+        }
     }
 
 
@@ -35,7 +47,7 @@
         }
 
         100% {
-            left: 80vw;
+            left: 75vw;
             bottom: 42svh;
         }
     }

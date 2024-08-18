@@ -123,13 +123,13 @@
         transform: rotate(0);
         width: 22px;
         height: 22px;
-        animation: loader .5s linear infinite;
+        animation: spin .5s linear infinite;
         margin-inline: auto;
     }
 
 }
 
-@keyframes loader {
+@keyframes spin {
     from {
         transform: rotate(0);
       }

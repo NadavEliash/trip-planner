@@ -170,7 +170,7 @@ body {
   display: none;
 }
 
-.loader {
+.spin {
   position: absolute;
   top: 12px;
   width: 16px;
@@ -178,7 +178,7 @@ body {
   border-radius: 50%;
   border: 1px solid var(--text-color);
   border-bottom: 0;
-  animation: loader .5s linear infinite;
+  animation: spin .5s linear infinite;
 }
 
 .hidden {
